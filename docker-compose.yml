@@ -1,13 +1,10 @@
-version: "3.8"
-
 services:
   mysql:
+    image: mysql:8
     container_name: mysql
-    image: mysql
     environment:
-      MYSQL_DATABASE: "devops"
-      MYSQL_ROOT_PASSWORD: "root"
-    
+      MYSQL_DATABASE: devops
+      MYSQL_ROOT_PASSWORD: root
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -21,8 +18,7 @@ services:
       start_period: 60s
 
   flask:
-    build:
-      context: 
+    build: .
     container_name: two-tier-app
     ports:
       - "5000:5000"
@@ -37,12 +33,6 @@ services:
       mysql:
         condition: service_healthy
     restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
 
 volumes:
   mysql-data:
